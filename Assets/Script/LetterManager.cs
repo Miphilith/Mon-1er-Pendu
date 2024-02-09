@@ -27,31 +27,50 @@ public class Manager : MonoBehaviour
         keyboard = GetComponent<VirtualKeyboard>();
         random = Random.Range(0, words.Length); //Prend un nombre antier aléatoire en fonction de la longueur du tableau
         hideWord = words[random]; //Prend le mot en fonction du nombre aléatoire
+
         for (int i = 0; i < hideWord.Length; i++)
         {
-            wordDisplay.text += '_';
+            showWord += '_'; //Integre a la variable "showWord" le nombre de caractères "_" par rapport au nombre de lettre dans le mot
         }
-        showWord = wordDisplay.text.ToString();
-        Debug.Log(hideWord);
+
+        wordDisplay.text = showWord; //Affiche showWord dans le jeu
+        //pendu_image = penduSprites[0];
+
+        Debug.Log(hideWord + ' ' + penduSprites);
     }
 
     public void CheckLetter()
     {
-        if (hideWord.ToUpper().Contains(keyboard.letter))
+        string temp = "";
+        int pendu = 0;
+        if (pendu != penduSprites.Length - 1)
         {
-            for (int i = 0; i < hideWord.Length; i++)
+            if (hideWord.ToUpper().Contains(keyboard.letter)) //Vérifie s'il y a la lettre dans le mot
             {
-                if (hideWord[i].Equals(keyboard.letter))
+                for (int i = 0; i < hideWord.Length; i++) //Parcour le mot
                 {
-                    showWord[i] = keyboard.letter;
+                    if (hideWord[i].ToString().ToUpper() == keyboard.letter) //Vérifie où est la lettre dans le mot
+                    {
+                        temp += keyboard.letter; //Ajoute la lettre dans la variable locale
+                    }
+                    else
+                    {
+                        temp += showWord[i]; //Garde les "_" pour pas avoir une lettre unique 
+                    }
                 }
+                showWord = temp;
             }
-            Debug.Log(showWord + ' ' + true);
-
+            else
+            {
+                pendu++;
+                //pendu_image = penduSprites[pendu];
+            }
         }
         else
         {
-            Debug.Log(false);
+            //pendu_image = penduSprites[penduSprites.Length - 1];
         }
+        
+        wordDisplay.text = showWord;
     }
 }

@@ -13,6 +13,7 @@ public class Manager : MonoBehaviour
     private string hideWord;
     private string showWord;
     private int random;
+    private int pendu;
 
     [SerializeField]
     private Image pendu_image;
@@ -21,9 +22,15 @@ public class Manager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI wordDisplay;
     private VirtualKeyboard keyboard;
+    [SerializeField]
+    private GameObject keyboardPanel;
+    [SerializeField]
+    private GameObject restartButton;
 
     void Start()
     {
+        pendu = 0;
+
         keyboard = GetComponent<VirtualKeyboard>();
         random = Random.Range(0, words.Length); //Prend un nombre antier aléatoire en fonction de la longueur du tableau
         hideWord = words[random]; //Prend le mot en fonction du nombre aléatoire
@@ -34,43 +41,56 @@ public class Manager : MonoBehaviour
         }
 
         wordDisplay.text = showWord; //Affiche showWord dans le jeu
-        //pendu_image = penduSprites[0];
+        pendu_image.sprite = penduSprites[0];
 
-        Debug.Log(hideWord + ' ' + penduSprites);
+        Debug.Log(hideWord);
     }
 
     public void CheckLetter()
     {
         string temp = "";
-        int pendu = 0;
-        if (pendu != penduSprites.Length - 1)
+
+        if (hideWord.ToUpper().Contains(keyboard.letter)) //Vérifie s'il y a la lettre dans le mot
         {
-            if (hideWord.ToUpper().Contains(keyboard.letter)) //Vérifie s'il y a la lettre dans le mot
+            for (int i = 0; i < hideWord.Length; i++) //Parcour le mot
             {
-                for (int i = 0; i < hideWord.Length; i++) //Parcour le mot
+                if (hideWord[i].ToString().ToUpper() == keyboard.letter) //Vérifie où est la lettre dans le mot
                 {
-                    if (hideWord[i].ToString().ToUpper() == keyboard.letter) //Vérifie où est la lettre dans le mot
-                    {
-                        temp += keyboard.letter; //Ajoute la lettre dans la variable locale
-                    }
-                    else
-                    {
-                        temp += showWord[i]; //Garde les "_" pour pas avoir une lettre unique 
-                    }
+                    temp += keyboard.letter; //Ajoute la lettre dans la variable locale
                 }
-                showWord = temp;
+                else
+                {
+                    temp += showWord[i]; //Garde les "_" pour pas avoir une lettre unique 
+                }
             }
-            else
+            showWord = temp;
+            if (showWord == hideWord.ToUpper())
             {
-                pendu++;
-                //pendu_image = penduSprites[pendu];
+                SetRestartWinCanvas();
             }
+            wordDisplay.text = showWord;
         }
         else
         {
-            //pendu_image = penduSprites[penduSprites.Length - 1];
-        }
-        
-        wordDisplay.text = showWord;
+            pendu++;
+            pendu_image.sprite = penduSprites[pendu];
+            if (pendu == penduSprites.Length - 2)
+            {
+                SetRestartLoseCanvas();
+                wordDisplay.text = hideWord.ToUpper();
+            }
+        }        
+    }
+
+    private void SetRestartWinCanvas()
+    {
+        pendu_image.sprite = penduSprites[penduSprites.Length - 1];
+        SetRestartLoseCanvas();
+    }
+
+    private void SetRestartLoseCanvas()
+    {
+        keyboardPanel.SetActive(false);
+        restartButton.SetActive(true);
     }
 }

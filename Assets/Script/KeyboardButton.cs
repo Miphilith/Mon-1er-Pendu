@@ -1,12 +1,15 @@
 using UnityEngine;
 using TMPro;
-
-public class KeyboardButton : MonoBehaviour
+namespace Pendu
 {
-    // Start is called before the first frame update
-    void Start()
+    public class KeyboardButton : MonoBehaviour
     {
-        TextMeshProUGUI tmp = GetComponentInChildren<TextMeshProUGUI>();
-        tmp.text = gameObject.name;
+        // Start is called before the first frame update
+        void Start()
+        {
+            TextMeshProUGUI tmp = GetComponentInChildren<TextMeshProUGUI>(); //Visualise la valeur des boutons
+            tmp.text = gameObject.name; //Insert le nom des bouton dans leur valeur
+        }
     }
+
 }

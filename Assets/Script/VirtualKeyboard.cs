@@ -1,13 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-public class VirtualKeyboard : MonoBehaviour
+using UnityEngine.UI;
+namespace Pendu
 {
-    public string letter;
-    public void Keyboard()
+    public class VirtualKeyboard : MonoBehaviour
     {
-        letter = EventSystem.current.currentSelectedGameObject.name;
+        public string letter;
+        public Button button;
+        public void Keyboard()
+        {
+            GameObject go = EventSystem.current.currentSelectedGameObject;
+            letter = go.name; //Vérifie la valeur des boutons
+            button = go.GetComponent<Button>(); //Visualise le bouton
+        }
     }
+
 }

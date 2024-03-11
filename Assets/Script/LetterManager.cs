@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 namespace Pendu
 {
     public class LetterManager : MonoBehaviour
     {
+        [SerializeField] private WordRequest wordRequest;
         private string[] words = new string[] { "abundant", "eccentric", "glimmer", "whimsical" }; //Prédétermine les mots
 
         private string hideWord;
@@ -33,8 +35,28 @@ namespace Pendu
             pendu = 0;
 
             keyboard = GetComponent<VirtualKeyboard>();
-            SelectWord();
+            StartCoroutine(SelectWordCoroutine());
 
+            
+        }
+
+        public void SelectWord()
+        {
+            random = Random.Range(0, words.Length); //Prend un nombre antier aléatoire en fonction de la longueur du tableau
+            hideWord = words[random]; //Prend le mot en fonction du nombre aléatoire
+        }
+
+        IEnumerator SelectWordCoroutine()
+        {
+            yield return StartCoroutine(wordRequest.RequestWordFromAPI());
+            if (wordRequest.word != null)
+            {
+                hideWord = wordRequest.word.motChoisi;
+            }
+            else
+            {
+                SelectWord();
+            }
             for (int i = 0; i < hideWord.Length; i++)
             {
                 showWord += '_'; //Integre a la variable "showWord" le nombre de caractères "_" par rapport au nombre de lettre dans le mot
@@ -44,12 +66,6 @@ namespace Pendu
             pendu_image.sprite = penduSprites[0];
 
             Debug.Log(hideWord);
-        }
-
-        public void SelectWord()
-        {
-            random = Random.Range(0, words.Length); //Prend un nombre antier aléatoire en fonction de la longueur du tableau
-            hideWord = words[random]; //Prend le mot en fonction du nombre aléatoire
         }
 
         public void CheckLetter()
@@ -93,7 +109,7 @@ namespace Pendu
 
         private void SetButton(int check)
         {
-            ColorBlock cb = keyboard.button.colors; //Visualise la vouleur du bouton
+            ColorBlock cb = keyboard.button.colors; //Injecte la couleur du bouton
 
             if (check == 0)
             {

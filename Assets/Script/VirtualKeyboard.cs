@@ -10,9 +10,8 @@ namespace Pendu
         public void Keyboard()
         {
             GameObject go = EventSystem.current.currentSelectedGameObject;
-            letter = go.name; //Vérifie la valeur des boutons
-            button = go.GetComponent<Button>(); //Visualise le bouton
+            letter = go.name; //Injecte la valeur des boutons
+            button = go.GetComponent<Button>(); //Injecte le bouton
         }
     }
-
 }
